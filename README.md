@@ -1,5 +1,3 @@
-Here is the README.md in Markdown format:
-
 # Microservice and API Autotests
 =====================================
 

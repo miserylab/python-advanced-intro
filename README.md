@@ -34,6 +34,13 @@ The API autotests cover the following scenarios:
 ### Test Data
 The test data is generated using the Faker library and is stored in the reqres_tests/utils directory.
 
+## Installation
+To install the required dependencies, navigate to the repository root and execute the following command:
+```
+pip install -r requirements.txt
+```
+This will install the necessary dependencies, including FastAPI, Uvicorn, and Pytest.
+
 ## Running the Microservice
 ### Command
 

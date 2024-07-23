@@ -35,11 +35,6 @@ def write_users_to_file(users):
             f.write(f"{user.id},{user.name},{user.email}\n")
 
 
-@app.get("/")
-async def root():
-    return {"message": "Welcome to the ReqRes API"}
-
-
 @app.get("/api/users/")
 async def read_users():
     return users

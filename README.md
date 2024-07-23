@@ -2,7 +2,7 @@
 =====================================
 
 ## Introduction
-This repository contains a Python + FastAPI microservice and API autotests for the "QA.QURU Python Advanced Intro" course.
+This repository contains a Python + FastAPI microservice and API autotests for the "QA.QURU Python Advanced" course.
 
 ## Microservice
 ### Endpoints

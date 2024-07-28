@@ -12,3 +12,5 @@
 12,Yasmin Farias,cunhabreno@example.org
 13,Alexia Barbosa,ppeixoto@example.com
 14,Mirella Nogueira,ayllaabreu@example.net
+15,Vicente Rodrigues,gomesisis@example.com
+16,Manuela Cavalcante,barbosamanuella@example.com

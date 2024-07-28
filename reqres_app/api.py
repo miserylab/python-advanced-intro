@@ -1,14 +1,17 @@
 import os
+from http import HTTPStatus
 
 from fastapi import FastAPI, HTTPException
+from fastapi_pagination import Page, paginate, add_pagination
 
-from reqres_app.models import User
+from reqres_app.models.app_status import AppStatus
+from reqres_app.models.user_model import User
 
 app = FastAPI()
 
 
-@app.get("/")
-def read_root():
+@app.get("/", status_code=HTTPStatus.OK)
+def get_root():
     return {"message": "Welcome to your FastAPI microservice!"}
 
 
@@ -35,20 +38,29 @@ def write_users_to_file(users):
             f.write(f"{user.id},{user.name},{user.email}\n")
 
 
-@app.get("/api/users/")
-async def read_users():
-    return users
+@app.get("/status", status_code=HTTPStatus.OK)
+async def status() -> AppStatus:
+    return AppStatus(users=bool(users))
 
 
-@app.get("/api/users/{user_id}")
-async def read_user(user_id: int):
-    for user in users:
-        if user.id == user_id:
-            return user
-    raise HTTPException(status_code=404, detail="User not found")
+@app.get("/api/users/", status_code=HTTPStatus.OK)
+async def get_users() -> Page[User]:
+    return paginate(users)
 
 
-@app.post("/api/users/")
+add_pagination(app)
+
+
+@app.get("/api/users/{user_id}", status_code=HTTPStatus.OK)
+async def get_user(user_id: int):
+    if user_id < 1:
+        raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail="User ID is invalid")
+    if user_id > len(users):
+        raise HTTPException(status_code=HTTPStatus.NOT_FOUND, detail="User not found")
+    return users[user_id - 1]
+
+
+@app.post("/api/users/", status_code=HTTPStatus.CREATED)
 async def create_user(user: User):
     new_user = User(id=len(users) + 1, name=user.name, email=user.email)
     users.append(new_user)
@@ -56,7 +68,7 @@ async def create_user(user: User):
     return new_user
 
 
-@app.put("/api/users/{user_id}")
+@app.put("/api/users/{user_id}", status_code=HTTPStatus.NO_CONTENT)
 async def update_user(user_id: int, user: User):
     for i, u in enumerate(users):
         if u.id == user_id:
@@ -67,11 +79,11 @@ async def update_user(user_id: int, user: User):
     raise HTTPException(status_code=404, detail="User not found")
 
 
-@app.delete("/api/users/{user_id}")
+@app.delete("/api/users/{user_id}", status_code=HTTPStatus.NO_CONTENT)
 async def delete_user(user_id: int):
     for i, u in enumerate(users):
         if u.id == user_id:
             del users[i]
             write_users_to_file(users)
-            return {"message": "User deleted"}
+            return
     raise HTTPException(status_code=404, detail="User not found")

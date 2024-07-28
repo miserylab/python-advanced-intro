@@ -5,6 +5,7 @@ import requests
 
 from reqres_tests.utils.urls import Urls
 from reqres_tests.data.pagination_data import PaginationData
+from reqres_tests.utils.utils import Utils
 
 
 class TestPagination:
@@ -18,18 +19,30 @@ class TestPagination:
         assert PaginationData.SIZE in response_json
         assert PaginationData.TOTAL in response_json
 
+        assert response_json["total"] == len(requests.get(f"""{app_url}{Urls().api_url("users")}""").json()["items"])
+        assert response_json["page"] == 1
+        assert response_json["size"] == PaginationData.DEFAULT_SIZE
+        assert response_json["pages"] == Utils.get_pages_in_pagination(response.json()["total"], response.json()["size"])
+
     @pytest.mark.parametrize("size", [2, 4, 8])
     def test_get_users_pagination_size(self, app_url, size):
         response = requests.get(f"""{app_url}{Urls().api_url("users")}?size={size}""")
         assert response.status_code == HTTPStatus.OK
         response_json = response.json()
         assert len(response_json["items"]) == size
+        assert response_json["total"] == len(requests.get(f"""{app_url}{Urls().api_url("users")}""").json()["items"])
+        assert response_json["page"] == 1
+        assert response_json["size"] == size
+        assert response_json["pages"] == Utils.get_pages_in_pagination(response.json()["total"], response.json()["size"])
 
     def test_get_users_pagination_page(self, app_url):
         response = requests.get(f"""{app_url}{Urls().api_url("users")}?page=2""")
         assert response.status_code == HTTPStatus.OK
         response_json = response.json()
         assert response_json["page"] == 2
+        assert response_json["total"] == len(requests.get(f"""{app_url}{Urls().api_url("users")}""").json()["items"])
+        assert response_json["size"] == PaginationData.DEFAULT_SIZE
+        assert response_json["pages"] == Utils.get_pages_in_pagination(response.json()["total"], response.json()["size"])
 
     @pytest.mark.parametrize(["size", "page"], [[2, 6], [4, 1], [3, 3]])
     def test_get_users_pagination_size_and_page(self, app_url, size, page):
@@ -37,7 +50,11 @@ class TestPagination:
         assert response.status_code == HTTPStatus.OK
         response_json = response.json()
         assert len(response_json["items"]) == size
+        assert response_json["size"] == size
         assert response_json["page"] == page
+        assert response_json["total"] == len(requests.get(f"""{app_url}{Urls().api_url("users")}""").json()["items"])
+        assert response_json["pages"] == Utils.get_pages_in_pagination(response.json()["total"],
+                                                                       response.json()["size"])
 
     @pytest.mark.parametrize(["size", "exp_msg"],
                              [[-1, PaginationData.INVALID_INPUT_MSG], ["ffdsf", PaginationData.INVALID_INT_INPUT_MSG]])

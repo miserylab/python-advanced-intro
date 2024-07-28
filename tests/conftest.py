@@ -9,7 +9,7 @@ from reqres_tests.utils.utils import TestData
 import dotenv
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(autouse=True, scope='session')
 def envs():
     dotenv.load_dotenv()
 

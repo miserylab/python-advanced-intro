@@ -1,19 +1,29 @@
 from faker import Faker
 
+
 class Utils:
     @staticmethod
     def get_pages_in_pagination(total, size) -> int:
-        return -(-total//size)
+        return -(-total // size)
 
 
 class TestData:
-    def __init__(self):
-        self.faker = Faker("pt_BR")
-        self.test_user_data_to_create = [{"id": 1, "name": self.faker.name(), "email": self.faker.email()}]
-        self.update_user_data_to_create = [{"id": 1, "name": self.faker.name(), "email": self.faker.email()}]
+    @staticmethod
+    def get_test_user_data():
+        faker = Faker("pt_BR")
+        return {"email": faker.email(), "first_name": faker.first_name(), "last_name": faker.last_name(), "avatar": faker.image_url()}
 
-    def get_test_user_data(self):
-        return self.test_user_data_to_create[0]
+    @staticmethod
+    def get_test_user_data_for_update():
+        faker = Faker("pt_BR")
+        return {"email": faker.email(), "first_name": faker.first_name(), "last_name": faker.last_name(), "avatar": faker.image_url()}
 
-    def get_test_user_data_for_update(self):
-        return self.update_user_data_to_create[0]
+    @staticmethod
+    def get_test_user_data_invalid_email():
+        faker = Faker("pt_BR")
+        return {"email": faker.name, "first_name": faker.first_name(), "last_name": faker.last_name(), "avatar": faker.image_url()}
+
+    @staticmethod
+    def get_test_user_data_invalid_avatar():
+        faker = Faker("pt_BR")
+        return {"email": faker.email(), "first_name": faker.first_name(), "last_name": faker.last_name(), "avatar": faker.name}

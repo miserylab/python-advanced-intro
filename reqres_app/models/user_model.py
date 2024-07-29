@@ -1,15 +1,24 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, EmailStr, HttpUrl
+from sqlmodel import Field, SQLModel
 
 
-class User(BaseModel):
-    id: int = Field(frozen=True)
-    name: str
-    email: str
+class User(SQLModel, table=True):
+    id: int | None = Field(default=None, primary_key=True)
+    email: EmailStr
+    first_name: str
+    last_name: str
+    avatar: str
 
 
-class Resource(BaseModel):
-    id: int
-    name: str
-    year: int
-    color: str
-    pantone_value: str
+class UserCreate(BaseModel):
+    email: EmailStr
+    first_name: str
+    last_name: str
+    avatar: HttpUrl
+
+
+class UserUpdate(BaseModel):
+    email: EmailStr | None = None
+    first_name: str | None = None
+    last_name: str | None = None
+    avatar: HttpUrl | None = None

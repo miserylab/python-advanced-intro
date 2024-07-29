@@ -7,3 +7,6 @@ pydantic~=2.8.2
 jsonschema~=4.23.0
 fastapi-pagination
 python-dotenv~=1.0.1
+psycopg2-binary==2.9.9
+SQLAlchemy==2.0.31
+sqlmodel

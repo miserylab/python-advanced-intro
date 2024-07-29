@@ -2,7 +2,7 @@ import os
 from http import HTTPStatus
 
 from fastapi import FastAPI, HTTPException
-from fastapi_pagination import Page, paginate, add_pagination
+from fastapi_pagination import Page, add_pagination, paginate
 
 from reqres_app.models.app_status import AppStatus
 from reqres_app.models.user_model import User
@@ -68,7 +68,7 @@ async def create_user(user: User):
     return new_user
 
 
-@app.put("/api/users/{user_id}", status_code=HTTPStatus.NO_CONTENT)
+@app.patch("/api/users/{user_id}", status_code=HTTPStatus.NO_CONTENT)
 async def update_user(user_id: int, user: User):
     for i, u in enumerate(users):
         if u.id == user_id:

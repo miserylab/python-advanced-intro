@@ -86,8 +86,8 @@ class TestPagination:
         assert PaginationData.PAGE in response.json()["detail"][0]["loc"]
         assert response.json()["detail"][0]["msg"] == exp_msg
 
-    def test_get_users_pagination_entries_on_pages(self):
-        total = len(requests.get(Urls().api_url("users")).json()["items"])
+    def test_get_users_pagination_entries_on_pages(self, total_users):
+        total = total_users
         size = total // 2
         items_on_first_page = requests.get(f"{Urls().api_url('users')}?size={size}&page=1").json()["items"]
         ids_on_first_page = [item["id"] for item in items_on_first_page]

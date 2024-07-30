@@ -1,9 +1,9 @@
 from http import HTTPStatus
 
-import pydantic
 from fastapi import APIRouter, HTTPException
 from fastapi_pagination import Page, paginate
 from fastapi_pagination.utils import disable_installed_extensions_check
+
 from reqres_app.database import users
 from reqres_app.models.user_model import User, UserCreate, UserUpdate
 

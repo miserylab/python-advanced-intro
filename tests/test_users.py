@@ -59,13 +59,13 @@ class TestApi:
         assert response.json()["avatar"] == post_delete_user["avatar"]
 
     def test_post_user(self, test_data):
-        users_before = requests.get(Urls().api_url('users')).json()["items"]
+        users_before = requests.get(Urls().api_url("users")).json()["items"]
 
         user_data = test_data.get_test_user_data()
-        response = requests.post(Urls().api_url('users'), json=user_data)
+        response = requests.post(Urls().api_url("users"), json=user_data)
         assert response.status_code == HTTPStatus.CREATED
 
-        users_after = requests.get(Urls().api_url('users')).json()["items"]
+        users_after = requests.get(Urls().api_url("users")).json()["items"]
         assert len(users_after) == len(users_before) + 1
 
         created_user = list(filter(lambda x: x["last_name"] == user_data["last_name"], users_after))
@@ -82,9 +82,7 @@ class TestApi:
     def test_update_user(self, post_delete_user, test_data):
         user_before = post_delete_user
         updated_user_data = test_data.get_test_user_data_for_update()
-        response = requests.patch(
-            f"{Urls().api_url('users')}{post_delete_user['id']}", json=updated_user_data
-        )
+        response = requests.patch(f"{Urls().api_url('users')}{post_delete_user['id']}", json=updated_user_data)
         assert response.status_code == HTTPStatus.OK
 
         user_after = requests.get(f"{Urls().api_url('users')}{post_delete_user['id']}").json()
@@ -101,7 +99,7 @@ class TestApi:
         assert user_after["avatar"] == updated_user_data["avatar"]
 
     def test_update_user_method_not_allowed(self, app_url):
-        response = requests.put(Urls().api_url('users'))
+        response = requests.put(Urls().api_url("users"))
         assert response.status_code == HTTPStatus.METHOD_NOT_ALLOWED
 
     def test_update_user_405(self, test_data):
@@ -110,24 +108,22 @@ class TestApi:
         response = requests.patch(f"{Urls().api_url('users')}{str_value}", data=update_data)
 
         assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
-        assert response.json()["detail"][0][
-                   "msg"] == UserData.INVALID_USER_ID_TYPE
+        assert response.json()["detail"][0]["msg"] == UserData.INVALID_USER_ID_TYPE
         assert response.json()["detail"][0]["input"] == str_value
 
     def test_delete_user(self, created_user):
-        users_before = requests.get(Urls().api_url('users')).json()["items"]
+        users_before = requests.get(Urls().api_url("users")).json()["items"]
         response = requests.delete(f"{Urls().api_url('users')}{created_user['id']}", data={})
 
         assert response.status_code == HTTPStatus.NO_CONTENT
 
-        users_after = requests.get(Urls().api_url('users')).json()["items"]
+        users_after = requests.get(Urls().api_url("users")).json()["items"]
 
         assert len(users_after) == len(users_before) - 1
 
     @pytest.mark.parametrize(
         ["user_id", "status_code", "detail"],
-        [[-1, HTTPStatus.BAD_REQUEST, "User ID is invalid"],
-         [99999, HTTPStatus.NOT_FOUND, "User not found"]]
+        [[-1, HTTPStatus.BAD_REQUEST, "User ID is invalid"], [99999, HTTPStatus.NOT_FOUND, "User not found"]],
     )
     def test_delete_user_negative(self, app_url, user_id, status_code, detail):
         response = requests.delete(f"{Urls().api_url('users')}{user_id}", data={})
@@ -140,6 +136,5 @@ class TestApi:
         response = requests.delete(f"{Urls().api_url('users')}{str_value}", data={})
 
         assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY
-        assert response.json()["detail"][0][
-                   "msg"] == UserData.INVALID_USER_ID_TYPE
+        assert response.json()["detail"][0]["msg"] == UserData.INVALID_USER_ID_TYPE
         assert response.json()["detail"][0]["input"] == str_value

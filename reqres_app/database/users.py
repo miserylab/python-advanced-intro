@@ -1,11 +1,11 @@
 from http import HTTPStatus
-from fastapi import HTTPException
 from typing import Iterable, Type
 
-from pydantic_core import Url
+from fastapi import HTTPException
 from sqlmodel import Session, select
-from reqres_app.models.user_model import User, UserUpdate
+
 from reqres_app.database.engine import engine
+from reqres_app.models.user_model import User
 
 
 def get_user(user_id: int) -> User | None:

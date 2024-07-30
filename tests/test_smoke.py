@@ -20,6 +20,6 @@ class TestSmoke:
 
     @pytest.mark.usefixtures("fill_test_data")
     def test_get_users(self):
-        response = requests.get(Urls().api_url('users'))
+        response = requests.get(Urls().api_url("users"))
         assert response.status_code == HTTPStatus.OK
         assert isinstance(response.json(), dict)

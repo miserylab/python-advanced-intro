@@ -3,10 +3,10 @@ from http import HTTPStatus
 import pytest
 import requests
 
-from reqres_app.models.app_status import AppStatus
-from reqres_app.models.root_model import Root
-from reqres_tests.data.root_data import RootData
-from reqres_tests.utils.urls import Urls
+from app.models.app_status import AppStatus
+from app.models.root_model import Root
+from app_tests.data.root_data import RootData
+from app_tests.utils.urls import Urls
 
 
 class TestSmoke:

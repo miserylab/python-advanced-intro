@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from reqres_app.models.user_model import User
+from app.models.user_model import User
 
 
 class PaginationResponse(BaseModel):

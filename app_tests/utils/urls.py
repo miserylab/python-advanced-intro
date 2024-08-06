@@ -1,4 +1,4 @@
-from reqres_tests.utils.config import Config
+from app_tests.utils.config import Config
 
 
 class Urls:

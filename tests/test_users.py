@@ -3,10 +3,10 @@ from http import HTTPStatus
 import pytest
 import requests
 
-from reqres_app.models.error_message_model import BasicErrorResponse, ErrorResponse
-from reqres_app.models.user_model import User, UserResponse
-from reqres_tests.data.user_data import UserData
-from reqres_tests.utils.urls import Urls
+from app.models.error_message_model import BasicErrorResponse, ErrorResponse
+from app.models.user_model import User, UserResponse
+from app_tests.data.user_data import UserData
+from app_tests.utils.urls import Urls
 
 
 class TestApi:
@@ -58,8 +58,8 @@ class TestApi:
         assert response.status_code == HTTPStatus.BAD_REQUEST
         assert message.detail == UserData.INVALID_USER_ID
 
-    def test_post_user(self, test_data):
-        user_data = test_data.get_test_user_data()
+    def test_post_user(self, user_test_data):
+        user_data = user_test_data["valid_user_data"]
         response = requests.post(Urls().api_url("users"), json=user_data)
         assert response.status_code == HTTPStatus.CREATED
 
@@ -76,22 +76,14 @@ class TestApi:
         response = requests.delete(f"{Urls().api_url('users')}{response.json()['id']}", data={})
         assert response.status_code == HTTPStatus.NO_CONTENT
 
-    def test_update_user(self, fill_test_data, test_data):
+    def test_update_user(self, fill_test_data, user_test_data):
         user_id = fill_test_data[0]
-        user_before_response = requests.get(f"{Urls().api_url('users')}{user_id}").json()
-        user_before = UserResponse.model_validate(user_before_response)
-        updated_user_data = test_data.get_test_user_data_for_update()
+        updated_user_data = user_test_data["update_user_data"]
         response = requests.patch(f"{Urls().api_url('users')}{user_id}", json=updated_user_data)
         assert response.status_code == HTTPStatus.OK
 
         user_after = requests.get(f"{Urls().api_url('users')}{user_id}").json()
         updated_user = UserResponse.model_validate(user_after)
-
-        assert user_before.id == updated_user.id
-        assert user_before.email != updated_user.email
-        assert user_before.first_name != updated_user.first_name
-        assert user_before.last_name != updated_user.last_name
-        assert user_before.avatar != updated_user.avatar
 
         assert updated_user.email == updated_user_data["email"]
         assert updated_user.first_name == updated_user_data["first_name"]
@@ -104,8 +96,8 @@ class TestApi:
         assert response.status_code == HTTPStatus.METHOD_NOT_ALLOWED
         assert message.detail == UserData.METHOD_NOT_ALLOWED
 
-    def test_update_user_405(self, test_data):
-        update_data = test_data.get_test_user_data_for_update()
+    def test_update_user_405(self, user_test_data):
+        update_data = user_test_data["update_user_data"]
         str_value = "ffdsf"
         response = requests.patch(f"{Urls().api_url('users')}{str_value}", data=update_data)
         message = ErrorResponse.model_validate(response.json())

@@ -3,11 +3,11 @@ from http import HTTPStatus
 import pytest
 import requests
 
-from reqres_app.models.error_message_model import ErrorResponse
-from reqres_app.models.pagination_model import PaginationResponse
-from reqres_tests.data.pagination_data import PaginationData
-from reqres_tests.utils.urls import Urls
-from reqres_tests.utils.utils import Utils
+from app.models.error_message_model import ErrorResponse
+from app.models.pagination_model import PaginationResponse
+from app_tests.data.pagination_data import PaginationData
+from app_tests.utils.urls import Urls
+from app_tests.utils.utils import Utils
 
 
 @pytest.fixture

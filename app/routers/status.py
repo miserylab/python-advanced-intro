@@ -2,8 +2,8 @@ from http import HTTPStatus
 
 from fastapi import APIRouter
 
-from reqres_app.database.engine import check_availability
-from reqres_app.models.app_status import AppStatus
+from app.database.engine import check_availability
+from app.models.app_status import AppStatus
 
 router = APIRouter()
 

@@ -5,9 +5,9 @@ from http import HTTPStatus
 import dotenv
 import pytest
 import requests
+from faker import Faker
 
-from reqres_tests.data.user_data import TestData
-from reqres_tests.utils.urls import Urls
+from app_tests.utils.urls import Urls
 
 
 @pytest.fixture(autouse=True, scope="session")
@@ -21,8 +21,34 @@ def app_url():
 
 
 @pytest.fixture
-def test_data():
-    return TestData()
+def user_test_data():
+    faker = Faker("pt_BR")
+    return {
+        "valid_user_data": {
+            "email": faker.email(),
+            "first_name": faker.first_name(),
+            "last_name": faker.last_name(),
+            "avatar": faker.image_url(),
+        },
+        "update_user_data": {
+            "email": faker.email(),
+            "first_name": faker.first_name(),
+            "last_name": faker.last_name(),
+            "avatar": faker.image_url(),
+        },
+        "invalid_email_data": {
+            "email": faker.name(),
+            "first_name": faker.first_name(),
+            "last_name": faker.last_name(),
+            "avatar": faker.image_url(),
+        },
+        "invalid_avatar_data": {
+            "email": faker.email(),
+            "first_name": faker.first_name(),
+            "last_name": faker.last_name(),
+            "avatar": faker.name(),
+        },
+    }
 
 
 @pytest.fixture(scope="session")
